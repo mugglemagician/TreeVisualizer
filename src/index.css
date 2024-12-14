@@ -29,4 +29,12 @@ button {
     border-radius: .3em;
     border: none;
     color: black;
+    background-color: #00ADB5;
+    font-weight: 600;
+    font-size: large;
+    transition: transform .1s ease-in-out;
+}
+
+button:hover {
+    transform: scale(1.05);
 }

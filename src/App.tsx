@@ -1,16 +1,27 @@
 import { useState } from "react";
 import Sidebar from "./Components/Sidebar/Sidebar";
-import Tree from "./Components/Tree/Tree";
 import "./index.css";
+import MainView from "./Components/MainView/MainView";
 
 function App() {
 
-  const [visualize, setVisualize] = useState<boolean>(false);
+  const [startVisualizing, setStartVisualizing] = useState<boolean>(false);
   const [treeToVisualize, setTreeToVisualize] = useState<string | null>(null);
+  const [isWindowResized, setIsWindowResized] = useState<boolean>(false);
 
   return <>
-    <Tree visualize={visualize} treeToVisualize={treeToVisualize} />
-    <Sidebar setVisualize={setVisualize} setTreeToVisualize={setTreeToVisualize} />
+    <MainView
+      startVisualizing={startVisualizing}
+      treeToVisualize={treeToVisualize}
+      setStartVisualizing={setStartVisualizing}
+      isWindowResized={isWindowResized}
+      setIsWindowResized={setIsWindowResized} />
+
+    <Sidebar
+      setStartVisualizing={setStartVisualizing}
+      setTreeToVisualize={setTreeToVisualize}
+      setIsWindowResized={setIsWindowResized} />
+
   </>
 }
 

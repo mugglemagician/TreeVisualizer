@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { TreeNodeType } from "../../types";
+import { TreeNodePropType } from "../../types";
 import "./TreeNode.css";
 
-export default function TreeNode({ node, xLB, xRB, yPos, parentX, parentY }: TreeNodeType) {
+export default function TreeNode({ node, xLB, xRB, yPos, parentX, parentY }: TreeNodePropType) {
 
     const nodeRef = useRef<HTMLDivElement | null>(null);
     const [centerX, setCenterX] = useState<number | undefined>(undefined);
