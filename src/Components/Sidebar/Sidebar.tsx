@@ -60,7 +60,7 @@ export default function Sidebar({ setDrawTree, setTreeToVisualize, setIsWindowRe
 
                     <div className="speed">
                         <label htmlFor="speed">Speed</label>
-                        <input type="range" min={70} max={400} id="speed" value={travSpeed} onChange={(e) => { setTravSpeed(parseInt(e.target.value)); speed.current = parseInt(e.target.value) }} />
+                        <input type="range" className="slider" min={100} max={400} id="speed" value={travSpeed} onChange={(e) => { setTravSpeed(parseInt(e.target.value)); speed.current = 500 - parseInt(e.target.value) }} />
                     </div>
 
                     <button className="pre-order" onClick={e => startTraversing(0)}>
