@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./BottomBar.css";
 
-export default function BottomBar({ setIsWindowResized }: { setIsWindowResized: React.Dispatch<React.SetStateAction<boolean>> }) {
+export default function BottomBar({ setIsWindowResized, treeLogs }: { setIsWindowResized: React.Dispatch<React.SetStateAction<boolean>>, treeLogs: string }) {
 
     const [isBottomBarVisible, setIsBottomBarVisible] = useState<boolean>(true);
 
@@ -19,9 +19,9 @@ export default function BottomBar({ setIsWindowResized }: { setIsWindowResized: 
 
             {
                 isBottomBarVisible && <div className="bottom-bar">
-
+                    <h3>Tree Logs</h3>
                     <p className="tree-logs">
-
+                        {treeLogs}
                     </p>
                 </div>
             }

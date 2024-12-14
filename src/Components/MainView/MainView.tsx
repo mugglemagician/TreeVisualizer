@@ -1,19 +1,24 @@
-import { TreePropType } from "../../types";
+import { MainViewPropType } from "../../types";
 import BottomBar from "../BottomBar/BottomBar";
 import Tree from "../Tree/Tree";
 import "./MainView.css";
 
-export default function MainView({ startVisualizing, treeToVisualize, setStartVisualizing, isWindowResized, setIsWindowResized }: TreePropType) {
+export default function MainView({ drawTree, treeToVisualize, setDrawTree, isWindowResized, setIsWindowResized, visualizeTraversal, setVisualizeTraversal, traversalAlgo, treeLogs, setTreeLogs, speed }: MainViewPropType) {
     return (
         <div className="main-view">
             <Tree
-                startVisualizing={startVisualizing}
+                drawTree={drawTree}
                 treeToVisualize={treeToVisualize}
-                setStartVisualizing={setStartVisualizing}
+                setDrawTree={setDrawTree}
                 isWindowResized={isWindowResized}
-                setIsWindowResized={setIsWindowResized} />
+                setIsWindowResized={setIsWindowResized}
+                visualizeTraversal={visualizeTraversal}
+                setVisualizeTraversal={setVisualizeTraversal}
+                traversalAlgo={traversalAlgo}
+                setTreeLogs={setTreeLogs}
+                speed={speed} />
 
-            <BottomBar setIsWindowResized={setIsWindowResized} />
+            <BottomBar setIsWindowResized={setIsWindowResized} treeLogs={treeLogs} />
         </div>
     );
 }

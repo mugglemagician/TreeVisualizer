@@ -3,18 +3,27 @@ import "./Sidebar.css";
 import { SidebarPropType } from "../../types";
 import React from "react";
 
-export default function Sidebar({ setStartVisualizing, setTreeToVisualize, setIsWindowResized }: SidebarPropType) {
+export default function Sidebar({ setDrawTree, setTreeToVisualize, setIsWindowResized, visualizeTraversal, setVisualizeTraversal, traversalAlgo, speed }: SidebarPropType) {
 
     const [treeInput, setTreeInput] = useState<string>("");
     const [isSidebarVisible, setIsSidebarVisible] = useState<boolean>(true);
+    const [travSpeed, setTravSpeed] = useState<number>(speed.current);
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        if (visualizeTraversal) return;
         setTreeInput(e.target.value);
     }
 
-    const startVisualizing = () => {
-        setStartVisualizing(true);
+    const startDrawing = () => {
+        if (visualizeTraversal) return;
+        setDrawTree(true);
         setTreeToVisualize(treeInput);
+    }
+
+    const startTraversing = (algo: number) => {
+        if (visualizeTraversal) return;
+        setVisualizeTraversal(true);
+        traversalAlgo.current = algo;
     }
 
     return (
@@ -40,7 +49,7 @@ export default function Sidebar({ setStartVisualizing, setTreeToVisualize, setIs
                 <div className="tree-input">
                     <h2>Input Your Tree In Level Order</h2>
                     <textarea name="treeInput" id="treeInput" value={treeInput} onChange={(e) => handleChange(e)}></textarea>
-                    <button className="visualize" onClick={startVisualizing}>Visualize</button>
+                    <button className="visualize" onClick={startDrawing}>Draw</button>
                 </div>
 
                 <div className="traversals">
@@ -49,24 +58,29 @@ export default function Sidebar({ setStartVisualizing, setTreeToVisualize, setIs
                         Perform Tree Traversal
                     </h2>
 
-                    <button className="pre-order">
+                    <div className="speed">
+                        <label htmlFor="speed">Speed</label>
+                        <input type="range" min={70} max={400} id="speed" value={travSpeed} onChange={(e) => { setTravSpeed(parseInt(e.target.value)); speed.current = parseInt(e.target.value) }} />
+                    </div>
+
+                    <button className="pre-order" onClick={e => startTraversing(0)}>
                         PreOrder
                     </button>
 
-                    <button className="in-order">
+                    <button className="in-order" onClick={e => startTraversing(1)}>
                         InOrder
                     </button>
 
-                    <button className="post-order">
+                    <button className="post-order" onClick={e => startTraversing(2)}>
                         PostOrder
                     </button>
 
-                    <button className="level-order">
+                    <button className="level-order" onClick={e => startTraversing(3)}>
                         LevelOrder
                     </button>
                 </div>
 
-            </div>}
+            </div >}
         </>
 
     )

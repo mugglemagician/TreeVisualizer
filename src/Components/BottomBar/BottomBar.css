@@ -6,6 +6,14 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding: 5px;
+    text-align: center;
+
+    h3 {
+        margin: 5px 0;
+    }
+
+    z-index: 1000;
 }
 
 .toggle-bottom-bar {
@@ -19,6 +27,7 @@
     border-bottom: 1px solid gray;
     border-left: 1px solid gray;
     cursor: pointer;
+    z-index: 1000;
 }
 
 .tree-logs {

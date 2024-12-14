@@ -1,7 +1,27 @@
-.tree-node {
+.tree-node,
+.tree-node-visited,
+.tree-node-visiting {
     width: 50px;
     height: 50px;
     border-radius: 25px;
     background-color: #00ADB5;
     position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+}
+
+.tree-node-visited {
+    background-color: greenyellow;
+}
+
+.tree-node-visiting {
+    background-color: darksalmon;
+}
+
+.tree-node-depth-five {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
 }

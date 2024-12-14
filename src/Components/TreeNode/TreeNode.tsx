@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { TreeNodePropType } from "../../types";
 import "./TreeNode.css";
+import React from "react";
 
-export default function TreeNode({ node, xLB, xRB, yPos, parentX, parentY }: TreeNodePropType) {
+export default React.memo(function TreeNode({ node, xLB, xRB, yPos, parentX, parentY, depth }: TreeNodePropType) {
 
     const nodeRef = useRef<HTMLDivElement | null>(null);
     const [centerX, setCenterX] = useState<number | undefined>(undefined);
     const [centerY, setCenterY] = useState<number | undefined>(undefined);
+
 
     useEffect(() => {
         if (nodeRef) {
@@ -21,6 +23,9 @@ export default function TreeNode({ node, xLB, xRB, yPos, parentX, parentY }: Tre
     if (!node) return <>
     </>;
 
+    let classes = node.isVisiting ? "tree-node-visiting" : node.isVisited ? "tree-node-visited" : "";
+    classes += depth === 5 ? " tree-node-depth-five" : "";
+
     // define spacing between nodes
     const verticalSpacing = 150;
 
@@ -30,6 +35,7 @@ export default function TreeNode({ node, xLB, xRB, yPos, parentX, parentY }: Tre
     const rightChildLB = nodeXPos;
 
     const childYPos = yPos + verticalSpacing;
+
 
     return (
         <>
@@ -50,12 +56,27 @@ export default function TreeNode({ node, xLB, xRB, yPos, parentX, parentY }: Tre
 
             }
 
-            <div ref={nodeRef} className="tree-node" style={{ left: nodeXPos - 20, top: yPos }}>
-
+            <div ref={nodeRef} className={`tree-node ${classes}`} style={{ left: nodeXPos - 20, top: yPos }}>
+                {depth <= 4 ? node.value : `${node.value}...`}
             </div>
 
-            <TreeNode node={node.left} xLB={xLB} xRB={leftChildRB} yPos={childYPos} parentX={centerX} parentY={centerY} />
-            <TreeNode node={node.right} xLB={rightChildLB} xRB={xRB} yPos={childYPos} parentX={centerX} parentY={centerY} />
+            {depth <= 4 && <TreeNode
+                node={node.left}
+                xLB={xLB}
+                xRB={leftChildRB}
+                yPos={childYPos}
+                parentX={centerX}
+                parentY={centerY}
+                depth={depth + 1} />}
+
+            {depth <= 4 && <TreeNode
+                node={node.right}
+                xLB={rightChildLB}
+                xRB={xRB}
+                yPos={childYPos}
+                parentX={centerX}
+                parentY={centerY}
+                depth={depth + 1} />}
         </>
     );
-}
+});

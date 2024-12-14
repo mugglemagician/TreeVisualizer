@@ -2,79 +2,101 @@ import { useEffect, useRef, useState } from "react";
 import { Node, TreePropType } from "../../types";
 import TreeNode from "../TreeNode/TreeNode";
 import "./Tree.css";
+import { cleanTree, constructTree, createNewRoot } from "../../Utils/construct";
+import { getTraversalAlgorithm } from "../../Utils/traversalAlgos";
+import React from "react";
 
-const createNode = (value: number, left: Node = null, right: Node = null): Node => ({
-    value,
-    left,
-    right
-});
 
-const constructTree = (input: string | null): Node => {
-    // nodeValues will represent the level order traversal of the tree
-    if (!input || input.length === 0) return null;
-    const nodeValues: string[] = input.split(",");
-    const root = createNode(parseInt(nodeValues[0]));
+export default React.memo(function Tree({ drawTree, treeToVisualize, setDrawTree, isWindowResized, setIsWindowResized, visualizeTraversal, setVisualizeTraversal, traversalAlgo, setTreeLogs, speed }: TreePropType) {
 
-    const queue: Node[] = [];
-    queue.push(root);
-
-    let ptr = 1;
-    let depth = 0;
-
-    while (ptr < nodeValues.length) {
-        let nodesInCurrentLevel = 1 << depth;
-        let nodesInNextLevel = 2 * nodesInCurrentLevel;
-        while (nodesInCurrentLevel-- > 0 && nodesInNextLevel-- > 0 && ptr < nodeValues.length) {
-            const node = queue.shift();
-            if (!node) {
-                queue.push(null);
-                queue.push(null);
-                ptr += 2;
-            }
-            else {
-                if (ptr < nodeValues.length && nodeValues[ptr] !== "") {
-                    node.left = createNode(parseInt(nodeValues[ptr]));
-                    queue.push(node.left);
-                }
-                else queue.push(null);
-                ptr++;
-
-                if (ptr < nodeValues.length && nodeValues[ptr] !== "") {
-                    node.right = createNode(parseInt(nodeValues[ptr]));
-                    queue.push(node.right);
-                }
-                else queue.push(null);
-                ptr++;
-            }
-        }
-    }
-
-    return root;
-}
-
-export default function Tree({ startVisualizing, treeToVisualize, setStartVisualizing, isWindowResized, setIsWindowResized }: TreePropType) {
-
-    const root = constructTree(treeToVisualize);
+    const [root, setRoot] = useState(constructTree(treeToVisualize));
     const treeRef = useRef<HTMLDivElement | null>(null);
     const [treeWidth, setTreeWidth] = useState<number>(0);
+    const [destroyTree, setDestroyTree] = useState<boolean>(false);
+    const [isTreeCleaned, setIsTreeCleaned] = useState<boolean>(false);
+    const startTraversalAlgorithm = useRef<boolean>(false);
 
     useEffect(() => {
         if (treeRef) {
             setTreeWidth(treeRef.current?.getBoundingClientRect().width || 0);
         }
-        if (startVisualizing) {
-            setStartVisualizing(false);
+
+        if (drawTree && !destroyTree) {
+            // to draw the tree first of all destroy the current tree
+            setDestroyTree(true);
+            setTreeLogs("");
+        }
+        else if (drawTree && destroyTree) {
+            // after destroying the tree recreate it
+            setRoot(constructTree(treeToVisualize));
+            setDrawTree(false);
+            setDestroyTree(false);
         }
 
-        if (isWindowResized) setIsWindowResized(false);
-    }, [startVisualizing, isWindowResized]);
+        if (isWindowResized && !destroyTree) {
+            // if the window is resized then first of all destroy the tree
+            setDestroyTree(true);
+        }
+        else if (isWindowResized && destroyTree) {
+            // after destroying the tree recreate it in the resized window
+            setDestroyTree(false);
+            setIsWindowResized(false);
+        }
+
+        if (visualizeTraversal && !isTreeCleaned && !startTraversalAlgorithm.current) {
+            // before starting the traversal algorithm, clean the tree
+            cleanTree(root);
+            setTreeLogs("");
+            setIsTreeCleaned(true);
+            startTraversalAlgorithm.current = true;
+        }
+
+
+    }, [drawTree, destroyTree, isWindowResized, visualizeTraversal, isTreeCleaned]);
+
+    if (visualizeTraversal && startTraversalAlgorithm.current && isTreeCleaned) {
+        const order: Node[] = getTraversalAlgorithm(traversalAlgo, root);
+        let offset = 0;
+
+        for (let node of order) {
+            setTimeout(() => {
+                if (!node) return;
+                node.isVisiting = true;
+                setRoot(createNewRoot(root));
+                setTreeLogs(curr => curr.length === 0 ? node.value.toString() : curr + ", " + node.value);
+            }, offset++ * speed);
+
+            setTimeout(() => {
+                if (!node) return;
+                node.isVisiting = false;
+                node.isVisited = true;
+                setRoot(createNewRoot(root));
+            }, offset++ * speed);
+
+        }
+
+        startTraversalAlgorithm.current = false;
+        setTimeout(() => {
+
+            setVisualizeTraversal(false);
+            setIsTreeCleaned(false);
+
+        }, ++offset * speed);
+    }
 
 
     return (
         <div ref={treeRef} className="tree">
-            {!startVisualizing
-                ? <TreeNode node={root} xLB={0} xRB={treeWidth} yPos={50} parentX={undefined} parentY={undefined} />
+            {!destroyTree
+                ? <TreeNode
+                    node={root}
+                    xLB={0}
+                    xRB={treeWidth}
+                    yPos={50}
+                    parentX={undefined}
+                    parentY={undefined}
+                    depth={0} />
                 : <></>}
         </div>
     );
-}
+});

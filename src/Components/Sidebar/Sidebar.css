@@ -54,6 +54,38 @@
     font-size: large;
 }
 
+.speed {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 100%;
+
+    label {
+        font-size: large;
+        font-weight: 600;
+    }
+}
+
+input[type="range"] {
+    width: 80%;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: gray;
+    border-radius: 50px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: #000;
+    cursor: pointer;
+}
+
 .traversals {
     width: 100%;
     height: 70%;
